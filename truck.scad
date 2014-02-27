@@ -1,4 +1,4 @@
-$fn = 80;
+$fn = 20;
 
 demo = true;
 //exploded = true;
@@ -18,10 +18,12 @@ truck_base_w = truck_base_hole_w + 12;
 center_dia = 19;
 center_w = 5;
 
-major_dia = 12.7;
+//major_dia = 15.87; // 5/8 rod
+major_dia = 12.7; // 1/2 machined rod
+
 major_len = 350;
 
-minor_dia = 10;
+minor_dia = 12;
 minor_len = 412;
 
 //##################### BASE PLATE ####################
@@ -48,12 +50,13 @@ module base_plate() {
 housing_id = 32.25;
 housing_od = 50;
 inset = 6;
-//housing_w = 41;//truck_base_w;
+//housing_w = 41;
 housing_w = truck_base_w;
 
 face_plate_hole_dia = base_plate_hole_dia;
-number_of_holes = 10;
-fudge_angle = 18;
+number_of_holes = 12;
+fudge_angle = -12;
+align_angle = 6;
 lock_out=2;
 face_thick = 8;
 axle_slop=0.5;
@@ -68,8 +71,8 @@ module housing_2d() {
 				square([1,housing_od],center=true);
 		}
 		circle(housing_id/2);
-		for(i=[0:2:number_of_holes-1]) {
-			rotate(i * 360 / number_of_holes + fudge_angle, [0, 0, 1])
+		for(i=[0:4:number_of_holes-1]) {
+			rotate(i * 360 / number_of_holes + fudge_angle + align_angle, [0, 0, 1])
 				translate([0,(housing_od/2-housing_id/2)/2+housing_id/2,0]) circle(face_plate_hole_dia/2);
 		}
 	}
@@ -186,7 +189,8 @@ module assembly() {
 	}
 
 	color("DarkGreen",0.75) {
-		translate([housing_w/2+face_thick/2,0,housing_od/2+base_plate_thick-inset]) rotate([36*1,0,180]) face_plate();
+		translate([housing_w/2+face_thick/2,0,housing_od/2+base_plate_thick-inset]) 
+			mirror([1,0,0]) rotate([36*1,0,0]) face_plate();
 		translate([-(housing_w/2+face_thick/2),0,housing_od/2+base_plate_thick-inset]) rotate([36*1,0,0]) face_plate();
 	}
 }
